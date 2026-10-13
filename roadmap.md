@@ -1,5 +1,8 @@
 # a4africa.org roadmap
 
+## a4a-v1b4 (13 Oct 2026)
+- [x] Signed-in name and photo/initials in the top-right with an account menu (email, role, My submissions, Submit, Admin desk, Sign out)
+
 ## a4a-v1b3 (13 Oct 2026)
 - [x] Google sign-in runs on a4africa.org (Google Identity Services), so the consent screen names a4africa.org, not the Supabase address; redirect sign-in kept as fallback
 

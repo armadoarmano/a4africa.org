@@ -7,7 +7,6 @@ import {
   Clock3,
   ExternalLink,
   Inbox,
-  LogOut,
   Mail,
   RefreshCw,
   ShieldCheck,
@@ -16,6 +15,8 @@ import {
   X,
 } from "lucide-react";
 import { AfricaMark } from "@/components/site/AfricaMark";
+import { AccountMenu } from "@/components/site/AccountMenu";
+import { useSession } from "@/hooks/use-session";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -54,6 +55,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
 
 function AdminPage() {
   const navigate = useNavigate();
+  const { user: me } = useSession();
   const loadDashboard = useServerFn(getAdminDashboard);
   const saveReview = useServerFn(reviewStory);
   const addAdmin = useServerFn(grantAdminRole);
@@ -171,11 +173,6 @@ function AdminPage() {
 
   const openMessages = data?.messages.filter((m) => !m.handled).length ?? 0;
 
-  const signOut = async () => {
-    await supabase.auth.signOut();
-    await navigate({ to: "/", replace: true });
-  };
-
   return (
     <main className="min-h-screen bg-cream font-body text-ink antialiased">
       <div className="mx-auto max-w-[1400px] px-5 py-6 sm:px-8 lg:px-10">
@@ -205,9 +202,7 @@ function AdminPage() {
             >
               <RefreshCw className={busy ? "size-4 animate-spin" : "size-4"} />
             </Button>
-            <Button variant="ghost" size="sm" className="gap-2 text-ink/65" onClick={signOut}>
-              <LogOut className="size-4" /> Sign out
-            </Button>
+            {me && <AccountMenu user={me} isAdmin />}
           </div>
         </header>
 

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
+import { AccountAvatar, AccountMenu, accountName } from "./AccountMenu";
 import { Logo } from "./Logo";
 
 const navLinks = [
@@ -47,42 +48,39 @@ export function SiteHeader() {
         ))}
       </nav>
       <div className="flex items-center gap-2">
-        {isAdmin && (
-          <Button
-            asChild
-            variant="ghost"
-            size="sm"
-            className="hidden gap-2 text-ink/70 md:inline-flex"
-          >
-            <Link to="/admin">
-              <LayoutDashboard className="size-4" /> Admin desk
-            </Link>
-          </Button>
-        )}
         {user ? (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="hidden gap-2 text-ink/70 md:inline-flex"
-            onClick={() => void signOut()}
-          >
-            <LogOut className="size-4" /> Sign out
-          </Button>
+          <>
+            {isAdmin && (
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className="hidden gap-2 text-ink/70 xl:inline-flex"
+              >
+                <Link to="/admin">
+                  <LayoutDashboard className="size-4" /> Admin desk
+                </Link>
+              </Button>
+            )}
+            <AccountMenu user={user} isAdmin={isAdmin} />
+          </>
         ) : (
-          <Button asChild variant="ghost" size="sm" className="hidden text-ink/70 md:inline-flex">
-            <Link to="/auth" search={{ next: "/submit" }}>
-              Sign in
-            </Link>
-          </Button>
+          <>
+            <Button asChild variant="ghost" size="sm" className="hidden text-ink/70 md:inline-flex">
+              <Link to="/auth" search={{ next: "/submit" }}>
+                Sign in
+              </Link>
+            </Button>
+            <Button
+              asChild
+              className="hidden gap-2 rounded-full bg-moss px-4 text-cream hover:bg-moss/90 sm:inline-flex"
+            >
+              <Link to="/submit">
+                Submit a story <Send className="size-4" />
+              </Link>
+            </Button>
+          </>
         )}
-        <Button
-          asChild
-          className="hidden gap-2 rounded-full bg-moss px-4 text-cream hover:bg-moss/90 sm:inline-flex"
-        >
-          <Link to="/submit">
-            Submit a story <Send className="size-4" />
-          </Link>
-        </Button>
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button
@@ -106,6 +104,18 @@ export function SiteHeader() {
                 </Button>
               </SheetClose>
             </div>
+            {user && (
+              <div className="flex items-center gap-3 border-b border-ink/10 bg-paper/60 px-6 py-4">
+                <AccountAvatar user={user} size="lg" />
+                <div className="min-w-0">
+                  <p className="truncate font-semibold">{accountName(user)}</p>
+                  {user.email && <p className="truncate text-xs text-ink/55">{user.email}</p>}
+                  <p className="mt-0.5 text-[11px] uppercase tracking-[0.12em] text-clay">
+                    {isAdmin ? "Administrator" : "Contributor"}
+                  </p>
+                </div>
+              </div>
+            )}
             <nav className="grid px-3 py-4" aria-label="Mobile navigation">
               {navLinks.map((link) => (
                 <SheetClose asChild key={link.label}>
@@ -170,11 +180,6 @@ export function SiteHeader() {
                     </Link>
                   </Button>
                 </SheetClose>
-              )}
-              {user?.email && (
-                <p className="truncate text-center text-xs text-ink/45">
-                  Signed in as {user.email}
-                </p>
               )}
             </div>
           </SheetContent>
