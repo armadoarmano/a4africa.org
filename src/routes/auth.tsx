@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, KeyRound, Mail, ShieldCheck } from "lucide-react";
 import { AfricaMark } from "@/components/site/AfricaMark";
+import { GoogleSignInButton } from "@/components/site/GoogleSignInButton";
 import { PasswordInput, passwordProblem } from "@/components/site/PasswordInput";
 
 import { Button } from "@/components/ui/button";
@@ -66,6 +67,8 @@ function AuthPage() {
   const [message, setMessage] = useState("");
   const [info, setInfo] = useState("");
   const [busy, setBusy] = useState(false);
+  // If Google's on-site button can't load (blocked script, old browser), offer the redirect flow.
+  const [googleFallback, setGoogleFallback] = useState(false);
 
   // Already signed in (or just returned from Google / an email link): continue.
   useEffect(() => {
@@ -217,15 +220,26 @@ function AuthPage() {
             <p className="mt-2 text-sm text-ink/60">{sub}</p>
             {mode !== "forgot" && (
               <>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="mt-7 h-12 w-full gap-3 rounded-full border-ink/15 bg-transparent text-ink hover:bg-cream"
-                  onClick={() => void handleGoogle()}
-                  disabled={busy}
-                >
-                  <GoogleIcon /> Continue with Google
-                </Button>
+                {googleFallback ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="mt-7 h-12 w-full gap-3 rounded-full border-ink/15 bg-transparent text-ink hover:bg-cream"
+                    onClick={() => void handleGoogle()}
+                    disabled={busy}
+                  >
+                    <GoogleIcon /> Continue with Google
+                  </Button>
+                ) : (
+                  <GoogleSignInButton
+                    text={mode === "sign-up" ? "signup_with" : "continue_with"}
+                    onError={(text) => {
+                      setInfo("");
+                      setMessage(text);
+                    }}
+                    onFallback={() => setGoogleFallback(true)}
+                  />
+                )}
                 <div className="my-6 flex items-center gap-3 text-xs text-ink/35">
                   <span className="h-px flex-1 bg-ink/10" /> or use email{" "}
                   <span className="h-px flex-1 bg-ink/10" />
