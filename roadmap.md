@@ -1,5 +1,8 @@
 # a4africa.org roadmap
 
+## a4a-v1b2 (13 Oct 2026)
+- [x] Show/hide eye on all password fields; confirm password on sign-up and reset; catches stray spaces
+
 ## a4a-v1b (12 Oct 2026)
 - [x] New A4A logo: Africa map mark with gold 4 and Madagascar; favicon, app icon, social image
 

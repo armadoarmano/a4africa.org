@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, KeyRound, Mail, ShieldCheck } from "lucide-react";
 import { AfricaMark } from "@/components/site/AfricaMark";
+import { PasswordInput, passwordProblem } from "@/components/site/PasswordInput";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -60,6 +61,7 @@ function AuthPage() {
   const [mode, setMode] = useState<Mode>("sign-in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [message, setMessage] = useState("");
   const [info, setInfo] = useState("");
@@ -82,6 +84,7 @@ function AuthPage() {
 
   const switchMode = (target: Mode) => {
     setMode(target);
+    setConfirm("");
     setMessage("");
     setInfo("");
   };
@@ -119,6 +122,13 @@ function AuthPage() {
         return;
       }
       await navigate({ to: next });
+      return;
+    }
+
+    const problem = passwordProblem(password, confirm);
+    if (problem) {
+      setBusy(false);
+      setMessage(problem);
       return;
     }
 
@@ -265,8 +275,8 @@ function AuthPage() {
                       </button>
                     )}
                   </span>
-                  <Input
-                    type="password"
+                  <PasswordInput
+                    id="auth-password"
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     minLength={8}
@@ -275,6 +285,33 @@ function AuthPage() {
                     placeholder="At least 8 characters"
                     autoComplete={mode === "sign-in" ? "current-password" : "new-password"}
                   />
+                </label>
+              )}
+              {mode === "sign-up" && (
+                <label className="grid gap-1.5 text-sm font-medium">
+                  Confirm password
+                  <PasswordInput
+                    id="auth-password-confirm"
+                    value={confirm}
+                    onChange={(event) => setConfirm(event.target.value)}
+                    minLength={8}
+                    maxLength={128}
+                    required
+                    placeholder="Type the same password again"
+                    autoComplete="new-password"
+                    aria-invalid={confirm.length > 0 && confirm !== password}
+                  />
+                  {confirm.length > 0 && (
+                    <span
+                      className={
+                        confirm === password
+                          ? "text-xs font-normal text-moss"
+                          : "text-xs font-normal text-clay"
+                      }
+                    >
+                      {confirm === password ? "✓ Passwords match" : "Passwords don't match yet"}
+                    </span>
+                  )}
                 </label>
               )}
               {message && (

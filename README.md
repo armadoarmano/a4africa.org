@@ -1,4 +1,4 @@
-# a4africa.org — a4a-v1b
+# a4africa.org — a4a-v1b2
 
 The good side of Africa, told by its people. A server-rendered TanStack Start app with a public story site, story submission with photo upload, sign-in (email + Google), contributor tools, and an admin review desk.
 

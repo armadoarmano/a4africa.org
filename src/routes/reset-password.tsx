@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, KeyRound } from "lucide-react";
 
+import { PasswordInput, passwordProblem } from "@/components/site/PasswordInput";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/reset-password")({
@@ -36,12 +36,9 @@ function ResetPasswordPage() {
   const save = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setMessage("");
-    if (password.length < 8) {
-      setMessage("Use at least 8 characters.");
-      return;
-    }
-    if (password !== confirm) {
-      setMessage("The two passwords don't match.");
+    const problem = passwordProblem(password, confirm);
+    if (problem) {
+      setMessage(problem);
       return;
     }
     setBusy(true);
@@ -79,8 +76,8 @@ function ResetPasswordPage() {
             <form className="mt-6 grid gap-4" onSubmit={save}>
               <label className="grid gap-1.5 text-sm font-medium">
                 New password
-                <Input
-                  type="password"
+                <PasswordInput
+                  id="reset-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   minLength={8}
@@ -91,15 +88,27 @@ function ResetPasswordPage() {
               </label>
               <label className="grid gap-1.5 text-sm font-medium">
                 Confirm new password
-                <Input
-                  type="password"
+                <PasswordInput
+                  id="reset-password-confirm"
                   value={confirm}
                   onChange={(e) => setConfirm(e.target.value)}
                   minLength={8}
                   maxLength={128}
                   required
                   autoComplete="new-password"
+                  aria-invalid={confirm.length > 0 && confirm !== password}
                 />
+                {confirm.length > 0 && (
+                  <span
+                    className={
+                      confirm === password
+                        ? "text-xs font-normal text-moss"
+                        : "text-xs font-normal text-clay"
+                    }
+                  >
+                    {confirm === password ? "✓ Passwords match" : "Passwords don't match yet"}
+                  </span>
+                )}
               </label>
               {message && (
                 <p role="alert" className="rounded-xl bg-clay/10 p-3 text-sm text-clay">
