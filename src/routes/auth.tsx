@@ -276,9 +276,11 @@ function AuthPage() {
                 />
               </label>
               {mode !== "forgot" && (
-                <label className="grid gap-1.5 text-sm font-medium">
-                  <span className="flex items-center justify-between">
-                    Password
+                <div className="grid gap-1.5 text-sm font-medium">
+                  {/* Label and "Forgot password?" are siblings, not nested, so tapping the
+                      eye icon can never trigger the forgot-password button (iOS Safari). */}
+                  <div className="flex items-center justify-between">
+                    <label htmlFor="auth-password">Password</label>
                     {mode === "sign-in" && (
                       <button
                         type="button"
@@ -288,7 +290,7 @@ function AuthPage() {
                         Forgot password?
                       </button>
                     )}
-                  </span>
+                  </div>
                   <PasswordInput
                     id="auth-password"
                     value={password}
@@ -299,11 +301,11 @@ function AuthPage() {
                     placeholder="At least 8 characters"
                     autoComplete={mode === "sign-in" ? "current-password" : "new-password"}
                   />
-                </label>
+                </div>
               )}
               {mode === "sign-up" && (
-                <label className="grid gap-1.5 text-sm font-medium">
-                  Confirm password
+                <div className="grid gap-1.5 text-sm font-medium">
+                  <label htmlFor="auth-password-confirm">Confirm password</label>
                   <PasswordInput
                     id="auth-password-confirm"
                     value={confirm}
@@ -326,7 +328,7 @@ function AuthPage() {
                       {confirm === password ? "✓ Passwords match" : "Passwords don't match yet"}
                     </span>
                   )}
-                </label>
+                </div>
               )}
               {message && (
                 <p role="alert" className="rounded-xl bg-clay/10 p-3 text-sm text-clay">

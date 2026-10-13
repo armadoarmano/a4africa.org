@@ -74,8 +74,8 @@ function ResetPasswordPage() {
             </div>
           ) : (
             <form className="mt-6 grid gap-4" onSubmit={save}>
-              <label className="grid gap-1.5 text-sm font-medium">
-                New password
+              <div className="grid gap-1.5 text-sm font-medium">
+                <label htmlFor="reset-password">New password</label>
                 <PasswordInput
                   id="reset-password"
                   value={password}
@@ -85,9 +85,9 @@ function ResetPasswordPage() {
                   required
                   autoComplete="new-password"
                 />
-              </label>
-              <label className="grid gap-1.5 text-sm font-medium">
-                Confirm new password
+              </div>
+              <div className="grid gap-1.5 text-sm font-medium">
+                <label htmlFor="reset-password-confirm">Confirm new password</label>
                 <PasswordInput
                   id="reset-password-confirm"
                   value={confirm}
@@ -109,7 +109,7 @@ function ResetPasswordPage() {
                     {confirm === password ? "✓ Passwords match" : "Passwords don't match yet"}
                   </span>
                 )}
-              </label>
+              </div>
               {message && (
                 <p role="alert" className="rounded-xl bg-clay/10 p-3 text-sm text-clay">
                   {message}

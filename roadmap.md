@@ -1,5 +1,8 @@
 # a4africa.org roadmap
 
+## a4a-v1b5 (13 Oct 2026)
+- [x] Fix: tapping the password eye no longer opens "Forgot password" (labels no longer wrap buttons)
+
 ## a4a-v1b4 (13 Oct 2026)
 - [x] Signed-in name and photo/initials in the top-right with an account menu (email, role, My submissions, Submit, Admin desk, Sign out)
 
